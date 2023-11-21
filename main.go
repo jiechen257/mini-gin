@@ -1,13 +1,11 @@
 package main
 
 import (
-	"fmt"
 	gin "mini-gin/gin"
 )
 
 func ping(c *gin.Context) {
-	fmt.Println(1)
-	c.String("%s", "ping")
+	c.String("%s", "pong")
 }
 
 func main() {
