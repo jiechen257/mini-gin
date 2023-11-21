@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
 	gin "mini-gin/gin"
+	"time"
 )
 
 func ping(c *gin.Context) {
+	fmt.Println("Response successful！", time.Now().Format("2006-01-02 15:04:05"))
 	c.String("%s", "pong")
 }
 

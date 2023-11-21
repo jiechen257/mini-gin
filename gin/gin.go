@@ -79,6 +79,7 @@ func (engine *Engine) AddRoute(method, path string, handlers ...HandlerFunc) {
 	if !ok {
 		engine.router[method][path] = handlers
 	}
+	fmt.Println(engine.router)
 }
 
 func (engine *Engine) Run(address string) {
