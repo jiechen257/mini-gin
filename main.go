@@ -1,18 +1,25 @@
 package main
 
 import (
-	"fmt"
-	gin "mini-gin/gin"
-	"time"
+	"mini-gin/gin"
+	"net/http"
 )
-
-func ping(c *gin.Context) {
-	fmt.Println("Response successful！", time.Now().Format("2006-01-02 15:04:05"))
-	c.String("%s", "pong")
-}
 
 func main() {
 	r := gin.New()
-	r.AddRoute("GET", "/ping", ping)
-	r.Run("127.0.0.1:9090")
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "<h1>Hello Gee</h1>")
+	})
+	r.GET("/hello", func(c *gin.Context) {
+		c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
+	})
+
+	r.POST("/login", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"username": c.PostForm("username"),
+			"password": c.PostForm("password"),
+		})
+	})
+
+	r.Run(":9999")
 }
