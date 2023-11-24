@@ -7,25 +7,34 @@ import (
 
 func main() {
 	r := gin.New()
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "<h1>Hello Gee</h1>")
+	r.GET("/index", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "<h1>Index Page</h1>")
 	})
-
-	r.POST("/login", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"username": c.PostForm("username"),
-			"password": c.PostForm("password"),
+	v1 := r.Group("/v1")
+	{
+		v1.GET("/", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "<h1>Hello gin</h1>")
 		})
-	})
 
-	r.GET("/hello/:name", func(c *gin.Context) {
-		// expect /hello/geektutu
-		c.String(http.StatusOK, "hello %s, you're at %s\n", c.Param("name"), c.Path)
-	})
+		v1.GET("/hello", func(c *gin.Context) {
+			// expect /hello?name=ginktutu
+			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Query("name"), c.Path)
+		})
+	}
+	v2 := r.Group("/v2")
+	{
+		v2.GET("/hello/:name", func(c *gin.Context) {
+			// expect /hello/ginktutu
+			c.String(http.StatusOK, "hello %s, you're at %s\n", c.Param("name"), c.Path)
+		})
+		v2.POST("/login", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{
+				"username": c.PostForm("username"),
+				"password": c.PostForm("password"),
+			})
+		})
 
-	r.GET("/assets/*filepath", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"filepath": c.Param("filepath")})
-	})
+	}
 
 	r.Run(":9999")
 }
