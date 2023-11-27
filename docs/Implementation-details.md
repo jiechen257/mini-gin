@@ -1,0 +1,51 @@
+## 动态路由
+动态路由包含 `/user/:id` 和 `/user/?filepath` 两种格式
+
+针对这两种格式的算法设计:(len为串的长度)
+- 使用 HashMap 遍历两次进行匹配 - 构造完 map 后进行查询，构造的时间复杂度 O(n * len), 查询则是 O(n) * O(1) = O(n)
+- 使用 `trie` 树 - 边构造树边查询，时间复杂度直接是 O(len)
+
+## 中间件
+数据结构还是用的洋葱模型，本质上就是通过闭包的方式把 `Context` 传递下去
+
+简化版示例：
+```golang
+// MiddlewareFunc 定义中间件函数类型
+type MiddlewareFunc func(http.HandlerFunc) http.HandlerFunc
+
+// Middleware1 是第一个中间件
+func Middleware1(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Entering Middleware1")
+		next(w, r)
+		fmt.Println("Leaving Middleware1")
+	}
+}
+
+// Middleware2 是第二个中间件
+func Middleware2(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Entering Middleware2")
+		next(w, r)
+		fmt.Println("Leaving Middleware2")
+	}
+}
+
+// FinalHandler 是最终的处理函数
+func FinalHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Executing FinalHandler")
+	w.Write([]byte("Hello, World!\n"))
+}
+
+func main() {
+	// 创建最终处理函数
+	finalHandler := http.HandlerFunc(FinalHandler)
+	// 构建洋葱模型
+	handler := Middleware1(Middleware2(finalHandler))
+
+	// 注册处理函数
+	http.Handle("/", handler)
+	// 启动 HTTP 服务器
+	http.ListenAndServe(":8080", nil)
+}
+```
