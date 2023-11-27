@@ -17,20 +17,32 @@ type Context struct {
 	Params map[string]string
 	// response info
 	StatusCode int
+	// middleware
+	handlers []HandlerFunc
+	index    int
+}
+
+func newContext(w http.ResponseWriter, req *http.Request) *Context {
+	return &Context{
+		Path:   req.URL.Path,
+		Method: req.Method,
+		Req:    req,
+		Writer: w,
+		index:  -1,
+	}
+}
+
+func (c *Context) Next() {
+	c.index++
+	s := len(c.handlers)
+	for ; c.index < s; c.index++ {
+		c.handlers[c.index](c)
+	}
 }
 
 func (c *Context) Param(key string) string {
 	value, _ := c.Params[key]
 	return value
-}
-
-func newContext(w http.ResponseWriter, req *http.Request) *Context {
-	return &Context{
-		Writer: w,
-		Req:    req,
-		Path:   req.URL.Path,
-		Method: req.Method,
-	}
 }
 
 func (c *Context) PostForm(key string) string {
