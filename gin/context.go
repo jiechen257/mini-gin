@@ -20,6 +20,8 @@ type Context struct {
 	// middleware
 	handlers []HandlerFunc
 	index    int
+	// engine pointer
+	engine *Engine
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
@@ -30,6 +32,12 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 		Writer: w,
 		index:  -1,
 	}
+}
+
+// Fail 在发生错误时返回 HTTP 响应
+func (c *Context) Fail(status int, message string) {
+	c.Writer.WriteHeader(status)
+	c.Writer.Write([]byte(message))
 }
 
 func (c *Context) Next() {
@@ -82,8 +90,10 @@ func (c *Context) Data(code int, data []byte) {
 	c.Writer.Write(data)
 }
 
-func (c *Context) HTML(code int, html string) {
+func (c *Context) HTML(code int, name string, data interface{}) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
-	c.Writer.Write([]byte(html))
+	if err := c.engine.htmlTemplates.ExecuteTemplate(c.Writer, name, data); err != nil {
+		c.Fail(500, err.Error())
+	}
 }
