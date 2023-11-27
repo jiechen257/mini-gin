@@ -5,10 +5,64 @@
 - 使用 HashMap 遍历两次进行匹配 - 构造完 map 后进行查询，构造的时间复杂度 O(n * len), 查询则是 O(n) * O(1) = O(n)
 - 使用 `trie` 树 - 边构造树边查询，时间复杂度直接是 O(len)
 
+`trie` 树简化版示例：
+```golang
+// TrieNode 表示字典树的节点
+type TrieNode struct {
+	children map[rune]*TrieNode
+	isEnd    bool
+}
+
+// Trie 表示字典树
+type Trie struct {
+	root *TrieNode
+}
+
+// NewTrie 创建一个新的字典树
+func NewTrie() *Trie {
+	return &Trie{
+		root: &TrieNode{
+			children: make(map[rune]*TrieNode),
+			isEnd:    false,
+		},
+	}
+}
+
+// Insert 向字典树中插入一个单词
+func (t *Trie) Insert(word string) {
+	node := t.root
+	for _, char := range word {
+		if node.children == nil {
+			node.children = make(map[rune]*TrieNode)
+		}
+		if _, ok := node.children[char]; !ok {
+			node.children[char] = &TrieNode{
+				children: make(map[rune]*TrieNode),
+				isEnd:    false,
+			}
+		}
+		node = node.children[char]
+	}
+	node.isEnd = true
+}
+
+// Search 在字典树中搜索一个单词
+func (t *Trie) Search(word string) bool {
+	node := t.root
+	for _, char := range word {
+		if _, ok := node.children[char]; !ok {
+			return false
+		}
+		node = node.children[char]
+	}
+	return node.isEnd
+}
+```
+
 ## 中间件
 数据结构还是用的洋葱模型，本质上就是通过闭包的方式把 `Context` 传递下去
 
-简化版示例：
+洋葱模型简化版示例：
 ```golang
 // MiddlewareFunc 定义中间件函数类型
 type MiddlewareFunc func(http.HandlerFunc) http.HandlerFunc
