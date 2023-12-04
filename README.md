@@ -5,5 +5,5 @@
 - 内部封装请求和响应的处理
 - [支持中间件](./docs/Implementation-details.md#中间件)
 - 支持静态资源服务和 HTML 模板渲染
-- 支持错误恢复
+- [支持错误恢复](./docs/Implementation-details.md#错误恢复)
 

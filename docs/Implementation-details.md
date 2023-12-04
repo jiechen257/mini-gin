@@ -103,3 +103,24 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 ```
+
+## 错误恢复
+> 关于 golang 的错误处理，详细可以看这篇文章 [GO 处理错误优雅化](https://becase.top/post/20231105000000)
+
+利用中间件 + `recover` 机制实现错误恢复
+
+```golang
+func Recovery() HandlerFunc {
+	return func(c *Context) {
+		defer func() {
+			if err := recover(); err != nil {
+				message := fmt.Sprintf("%s", err)
+				log.Printf("%s\n\n", trace(message))
+				c.Fail(http.StatusInternalServerError, "Internal Server Error")
+			}
+		}()
+
+		c.Next()
+	}
+}
+```
