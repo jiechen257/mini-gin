@@ -4,6 +4,7 @@ import (
 	"log"
 	"mini-gin/gin"
 	"net/http"
+	"text/template"
 	"time"
 )
 
@@ -21,12 +22,19 @@ func onlyForV2() gin.HandlerFunc {
 func MockRouterGroup() {
 	r := gin.New()
 	r.Use(gin.Logger()) // global midlleware
+
+	r.SetFuncMap(template.FuncMap{
+		"FormatAsDate": FormatAsDate,
+	})
+	r.LoadHTMLGlob("templates/*")
+	r.Static("/assets", "./static")
+
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "<h1>Hello gin</h1>", nil)
+		c.HTML(http.StatusOK, "css.html", nil)
 	})
 
 	v2 := r.Group("/v2")
-	// v2.Use(onlyForV2()) // v2 group middleware
+	v2.Use(onlyForV2()) // v2 group middleware
 	{
 		v2.GET("/hello/:name", func(c *gin.Context) {
 			// expect /hello/ginktutu
