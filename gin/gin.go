@@ -40,6 +40,8 @@ func New() *Engine {
 	engine := &Engine{router: newRouter()}
 	engine.RouterGroup = &RouterGroup{engine: engine}
 	engine.groups = []*RouterGroup{engine.RouterGroup}
+	// engine.RouterGroup.Use(Logger())
+	// engine.Use(Recovery())
 	return engine
 }
 

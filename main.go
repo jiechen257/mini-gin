@@ -5,6 +5,7 @@ import (
 )
 
 func main() {
-	// mock.MockRouterGroup()
-	mock.RenderTemplate()
+	mock.MockRouterGroup()
+	// mock.RenderTemplate()
+	// mock.MockRecovery()
 }

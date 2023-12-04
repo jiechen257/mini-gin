@@ -20,7 +20,6 @@ func onlyForV2() gin.HandlerFunc {
 
 func MockRouterGroup() {
 	r := gin.New()
-	r.Use(gin.Logger())
 	r.GET("/index", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "<h1>Index Page</h1>", nil)
 	})
