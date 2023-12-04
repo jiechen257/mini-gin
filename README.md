@@ -1,5 +1,3 @@
-# mini-gin
-
 ## Features
 - [支持动态路由和路由分组](./docs/Implementation-details.md#动态路由)
 - 内部封装请求和响应的处理
