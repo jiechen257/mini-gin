@@ -35,9 +35,9 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 }
 
 // Fail 在发生错误时返回 HTTP 响应
-func (c *Context) Fail(status int, message string) {
-	c.Writer.WriteHeader(status)
-	c.Writer.Write([]byte(message))
+func (c *Context) Fail(code int, err string) {
+	c.index = len(c.handlers)
+	c.JSON(code, H{"message": err})
 }
 
 func (c *Context) Next() {

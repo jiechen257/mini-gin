@@ -20,6 +20,8 @@ func FormatAsDate(t time.Time) string {
 
 func RenderTemplate() {
 	r := gin.New()
+	r.Use(gin.Logger())
+
 	r.SetFuncMap(template.FuncMap{
 		"FormatAsDate": FormatAsDate,
 	})
@@ -45,5 +47,5 @@ func RenderTemplate() {
 		})
 	})
 
-	r.Run(":5500")
+	r.Run(":9999")
 }
