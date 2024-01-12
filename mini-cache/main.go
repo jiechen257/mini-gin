@@ -1,8 +1,11 @@
 package main
 
-import "fmt"
+import (
+	test "mini-cache/test"
+)
+
 
 
 func main() {
-	fmt.Println("Hello world")
+	test.TestHttpServer()
 }

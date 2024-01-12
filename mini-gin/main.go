@@ -1,11 +1,11 @@
 package main
 
 import (
-	"mini-gin/mock"
+	test "mini-gin/test"
 )
 
 func main() {
-	mock.MockRouterGroup()
+	test.MockRouterGroup()
 	// mock.RenderTemplate()
 	// mock.MockRecovery()
 }
