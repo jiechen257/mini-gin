@@ -10,3 +10,9 @@ HTTP web 框架, via [gin-gonic/gin](https://github.com/gin-gonic/gin)
 
 ## Mini Cache
 分布式缓存工具，via [golang/groupcache](https://github.com/golang/groupcache)
+
+### Knowledge
+- [LRU 缓存算法](./mini-cache/docs/lru-algorithm.md)
+- [一致性哈希](./mini-cache/docs/Implementation-details.md#一致性哈希)
+
+
